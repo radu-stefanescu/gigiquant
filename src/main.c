@@ -17,7 +17,7 @@ int main(int argc, const char *argv[])
         return 1;
     }
     
-    int n1, n2, i;
+    int n1 = 0, n2 = 0, i;
     char s[10];
     
     for(i = 1; i <= 2; i++)
