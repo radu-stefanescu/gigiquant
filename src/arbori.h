@@ -3,7 +3,6 @@
 struct StockNode
 {
     char *symbol;
-    float pretCurent;
     struct StockNode *next;
 };
 typedef struct StockNode StockNode;
@@ -13,24 +12,18 @@ struct TreeNode
     StockNode *stocks;
     struct TreeNode *left;
     struct TreeNode *right;
-    int depth;
 };
 typedef struct TreeNode TreeNode;
 
 struct tabel
 {
     char *stockName;
-    float currentPrice;
+    float priceHistory[50];
 };
 typedef struct tabel tabel;
 
-void addAtEndStock(StockNode **head, char* numeStock    );
-StockNode* createNode(char *symbol, float pretCurent);
-void addTreeNode(TreeNode **root, TreeNode* node);
-
-
-
-TreeNode* createTreeNode(char *symbol, float pretCurent);
-StockNode* createStockNode(char *symbol, float pretCurent);
-void insert(TreeNode* root, char *symbol, float pretCurent, float pretReferinta);
-void add2Lists(TreeNode* root, char *symbol, float pretCurent);
+void addAtEndStock(StockNode **head, char* numeStock);
+void f(TreeNode** root, int day);
+void g(TreeNode** root, char* stockName, float v[], int n, int current);
+void afis(TreeNode* root);
+void h(TreeNode** root, int day, int current, struct tabel t[], int n, int myIndex);
