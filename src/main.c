@@ -61,7 +61,7 @@ int main(int argc, const char *argv[])
         return 1;
     }
     
-    printf("%d %d!\n", n1, n2);
+    //printf("%d %d!\n", n1, n2);
     FILE* fIn = fopen(argv[1], "rt");
     if(fIn == NULL)
     {
@@ -206,48 +206,54 @@ int main(int argc, const char *argv[])
     }
     else if(n1 >= 11 && n1 <= 15)
     {
-        printf("Hello333\n");
-        
         TreeNode *root = (TreeNode*)malloc(sizeof(TreeNode));
-        root->stocks = (StockNode*)malloc(sizeof(StockNode));
+        root->stocks = NULL;
         root->left = NULL;
         root->right = NULL;
-        root->depth = 0;
 
         char buffer[10000];
-        while(fgets(buffer, sizeof(buffer), fIn) != NULL)
+        int day = 0, n = 0, i;
+        tabel t[100];
+
+        while(fgets(buffer, sizeof(buffer), fIn) != NULL) 
         {
-            char *token;
-            tabel t[100];
-            int n = 0; 
-            //char s[2] = {',', '\n'};  //nu merge sar si peste "1"?!
-            token = strtok(buffer, ",\n");
-            TreeNode *current = root->stocks;
-            while(token != NULL && token[0] >= 'A' && token[0] <= 'Z')
+            char *token = strtok(buffer, ",\n\r");
+    
+            if(token != NULL && token[0] >= 'A' && token[0] <= 'Z') 
             {
-                //printf("%s ", token);
-                addAtEndStock(&root->stocks, token);
-                t[n++].stockName = token;
-                token = strtok(NULL, ",\n");
-            }
-
-            
-
-            int day = 1, k = 0;
-            while(token != NULL)
-            {
-                if(token == '\n')
-                {
-                    day++;
-                    k = 0;
-                    token = strtok(NULL, ",");
+                while(token != NULL) {
+                    t[n].stockName = strdup(token);
+                    n++;
+                    token = strtok(NULL, ",\n\r");
                 }
-                t[k++].priceHistory[day] = atof(token);
-                token = strtok(NULL, ",");
+            } 
+            else 
+            {
+                int k = 0;
+                while(token != NULL && k < n) {
+                    t[k].priceHistory[day] = atof(token);
+                    k++;
+                    token = strtok(NULL, ",\n\r");
+                }
+                day++;
             }
-            f(&(root->left), day - 1);
-            f(&(root->right), day - 1);
-            //printf("\n");
+        }
+
+
+        f(&(root->left), day - 1);
+        f(&(root->right), day - 1);
+        for(i = 0; i < n; i++)
+        {
+            g(&root, t[i].stockName, t[i].priceHistory, day - 1, 0);
+        }
+
+        //afis(root);
+
+        //printf("%p", &root);
+
+        for(i = 0; i < n; i++)
+        {
+            h(&root, day - 1, 0, t, n, i);
         }
     }
     
