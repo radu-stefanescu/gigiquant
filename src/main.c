@@ -250,10 +250,10 @@ int main(int argc, const char *argv[])
         //afis(root);
 
         //printf("%p", &root);
-
+        int switchAfisare = 0;
         for(i = 0; i < n; i++)
         {
-            h(&root, day - 1, 0, t, n, i);
+            h(&root, day - 1, 0, t, n, i, &switchAfisare);
         }
     }
     
