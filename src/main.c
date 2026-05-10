@@ -253,7 +253,7 @@ int main(int argc, const char *argv[])
         int switchAfisare = 0;
         for(i = 0; i < n; i++)
         {
-            h(&root, day - 1, 0, t, n, i, &switchAfisare);
+            h(&root, day - 1, 0, t, n, i, &switchAfisare, fOut);
         }
     }
     
