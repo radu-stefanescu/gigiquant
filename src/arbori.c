@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void addAtEndStock(StockNode **head, char* numeStock)
+void addAtEndStock(StockNode **head, const char* numeStock)
 {
     StockNode *aux = *head;
     StockNode *newNode = (StockNode*)malloc(sizeof(StockNode));
@@ -25,7 +25,7 @@ void addAtEndStock(StockNode **head, char* numeStock)
     }
 }
 
-void f(TreeNode** root, int day)
+void createEmptyTree(TreeNode** root, int day)
 {
     if(day == 0)
     {
@@ -40,11 +40,11 @@ void f(TreeNode** root, int day)
     (*root)->stocks = NULL;
     (*root)->left = NULL;
     (*root)->right = NULL;
-    f(&(*root)->left, day - 1);
-    f(&(*root)->right, day - 1);
+    createEmptyTree(&(*root)->left, day - 1);
+    createEmptyTree(&(*root)->right, day - 1);
 }
 
-void g(TreeNode** root, char* stockName, float v[], int day, int current)
+void insertStock(TreeNode** root, char* stockName, float v[], int day, int current)
 {
     addAtEndStock(&(*root)->stocks, stockName);
     if(current == day)
@@ -53,11 +53,11 @@ void g(TreeNode** root, char* stockName, float v[], int day, int current)
     }
     if(v[current] < v[current + 1])
     {
-        g(&(*root)->right, stockName, v, day, current + 1);
+        insertStock(&(*root)->right, stockName, v, day, current + 1);
     }
-    else if(v[current] >= v[current + 1])
+    else
     {
-        g(&(*root)->left, stockName, v, day, current + 1);
+        insertStock(&(*root)->left, stockName, v, day, current + 1);
     }
 }
 
@@ -77,7 +77,7 @@ void afis(TreeNode* root)
     afis(root->right);
 }
 
-void h(TreeNode** root, int day, int current, struct tabel t[], int n, int myIndex, int* switchAfisare, FILE* outputFILE)
+void findMirroredStock(TreeNode** root, int day, int current, struct tabel t[], int n, int myIndex, int* switchAfisare, FILE* outputFILE)
 {
     if(*root == NULL)
     {
@@ -99,7 +99,7 @@ void h(TreeNode** root, int day, int current, struct tabel t[], int n, int myInd
                 }
             }
             
-            if (strcmp(t[myIndex].stockName, iter->symbol) != 0 && myIndex < iterIndex) 
+            if (myIndex < iterIndex && strcmp(t[myIndex].stockName, iter->symbol)) 
             {
                 if(*switchAfisare == 1)
                 {
@@ -118,10 +118,29 @@ void h(TreeNode** root, int day, int current, struct tabel t[], int n, int myInd
     }
     if(t[myIndex].priceHistory[current] <= t[myIndex].priceHistory[current + 1])
     {
-        h(&(*root)->left, day, current + 1, t, n, myIndex, switchAfisare, outputFILE);
+        findMirroredStock(&(*root)->left, day, current + 1, t, n, myIndex, switchAfisare, outputFILE);
     }
-    else if(t[myIndex].priceHistory[current] > t[myIndex].priceHistory[current + 1])
+    else
     {
-        h(&(*root)->right, day, current + 1, t, n, myIndex, switchAfisare, outputFILE);
+        findMirroredStock(&(*root)->right, day, current + 1, t, n, myIndex, switchAfisare, outputFILE);
     }
+}
+
+void freeTree(TreeNode** root)
+{
+    if(*root == NULL) return;
+
+    freeTree(&(*root)->left);
+    freeTree(&(*root)->right); 
+
+    StockNode* currentStock = (*root)->stocks;
+    while(currentStock != NULL)
+    {
+        StockNode* temp = currentStock;
+        currentStock = currentStock->next;
+        free(temp->symbol);
+        free(temp);
+    }
+    free(*root);
+    *root = NULL;
 }

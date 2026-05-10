@@ -1,3 +1,14 @@
+/*
+
+Programul primeste un fisier de intrare si unul de iesire si ruleaza
+3 tipuri de task-uri in functie de indexul testului extras din argumente:
+- Task 1 (Teste 1-5): Calcul Sharpe Ratio folosind Liste Simplu Inlantuite.
+- Task 2 (Teste 6-10): Analiza de tranzactionare folosind Stive si Cozi.
+- Task 3 (Teste 11-15): Diversificare portofoliu gasind actiuni "in oglinda" 
+folosind Arbori Binari.
+
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,6 +32,7 @@ int main(int argc, const char *argv[])
     int n1 = 0, n2 = 0, i;
     char s[10];
     
+    // Extragem numarul testului (ex: 12 din data12.in si data12.ref)
     for(i = 1; i <= 2; i++)
     {
         int j = 0, k = -5;
@@ -55,6 +67,8 @@ int main(int argc, const char *argv[])
         }
     }
     
+
+    // Verificam ca fisierele input si output corespund aceluiasi test
     if(n1 != n2)
     {
         printf("Eroare la comparatie (in si ref diferite)!\n");
@@ -212,12 +226,12 @@ int main(int argc, const char *argv[])
         root->right = NULL;
 
         char buffer[10000];
-        int day = 0, n = 0, i;
+        int day = 0, n = 0;
         tabel t[100];
 
         while(fgets(buffer, sizeof(buffer), fIn) != NULL) 
         {
-            char *token = strtok(buffer, ",\n\r");
+            const char *token = strtok(buffer, ",\n\r");
     
             if(token != NULL && token[0] >= 'A' && token[0] <= 'Z') 
             {
@@ -240,11 +254,11 @@ int main(int argc, const char *argv[])
         }
 
 
-        f(&(root->left), day - 1);
-        f(&(root->right), day - 1);
+        createEmptyTree(&(root->left), day - 1);
+        createEmptyTree(&(root->right), day - 1);
         for(i = 0; i < n; i++)
         {
-            g(&root, t[i].stockName, t[i].priceHistory, day - 1, 0);
+            insertStock(&root, t[i].stockName, t[i].priceHistory, day - 1, 0);
         }
 
         //afis(root);
@@ -253,7 +267,14 @@ int main(int argc, const char *argv[])
         int switchAfisare = 0;
         for(i = 0; i < n; i++)
         {
-            h(&root, day - 1, 0, t, n, i, &switchAfisare, fOut);
+            findMirroredStock(&root, day - 1, 0, t, n, i, &switchAfisare, fOut);
+        }
+
+        freeTree(&root);
+
+        for(i = 0; i < n; i++)
+        {
+            free(t[i].stockName); // Eliberarea memorie alocate de strdup pt nume
         }
     }
     

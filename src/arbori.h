@@ -24,8 +24,9 @@ struct tabel
 };
 typedef struct tabel tabel;
 
-void addAtEndStock(StockNode **head, char* numeStock);
-void f(TreeNode** root, int day);
-void g(TreeNode** root, char* stockName, float v[], int day, int current);
+void addAtEndStock(StockNode **head, const char* numeStock);
+void createEmptyTree(TreeNode** root, int day);
+void insertStock(TreeNode** root, char* stockName, float v[], int day, int current);
 void afis(TreeNode* root);
-void h(TreeNode** root, int day, int current, struct tabel t[], int n, int myIndex, int* switchAfisare, FILE* outputFILE);
+void findMirroredStock(TreeNode** root, int day, int current, struct tabel t[], int n, int myIndex, int* switchAfisare, FILE* outputFILE);
+void freeTree(TreeNode** root);
