@@ -5,6 +5,7 @@
 #include "liste.h"
 #include "stive.h"
 #include "cozi.h"
+#include "arbori.h"
 
 #define PRECIZIE 3
 
@@ -56,10 +57,11 @@ int main(int argc, const char *argv[])
     
     if(n1 != n2)
     {
-        printf("Eroare la comparatie!\n");
+        printf("Eroare la comparatie (in si ref diferite)!\n");
         return 1;
     }
-
+    
+    printf("%d %d!\n", n1, n2);
     FILE* fIn = fopen(argv[1], "rt");
     if(fIn == NULL)
     {
@@ -76,6 +78,7 @@ int main(int argc, const char *argv[])
 
     if(n1 >= 1 && n1 <= 5)
     {
+        printf("Hello1\n");
         Node *head = NULL;
         int nrObs = 0;
         double x, sharpeRatio = 0.0f, sum = 0.0f, randamentMediu = 0.0f, volatilitate = 0.0f;
@@ -131,6 +134,8 @@ int main(int argc, const char *argv[])
     }
     else if(n1 >= 6 && n1 <= 10)
     {
+        printf("Hello2222\n");
+        
         char numePiata[3][30], buffer[30];
         stackNode* stackTop[3] = {NULL};
         int nrPiata = -1;
@@ -199,6 +204,53 @@ int main(int argc, const char *argv[])
         deleteStack(&stackTop[1]);
         deleteStack(&stackTop[2]); 
     }
+    else if(n1 >= 11 && n1 <= 15)
+    {
+        printf("Hello333\n");
+        
+        TreeNode *root = (TreeNode*)malloc(sizeof(TreeNode));
+        root->stocks = (StockNode*)malloc(sizeof(StockNode));
+        root->left = NULL;
+        root->right = NULL;
+        root->depth = 0;
+
+        char buffer[10000];
+        while(fgets(buffer, sizeof(buffer), fIn) != NULL)
+        {
+            char *token;
+            tabel t[100];
+            int n = 0; 
+            //char s[2] = {',', '\n'};  //nu merge sar si peste "1"?!
+            token = strtok(buffer, ",\n");
+            TreeNode *current = root->stocks;
+            while(token != NULL && token[0] >= 'A' && token[0] <= 'Z')
+            {
+                //printf("%s ", token);
+                addAtEndStock(&root->stocks, token);
+                t[n++].stockName = token;
+                token = strtok(NULL, ",\n");
+            }
+
+            
+
+            int day = 1, k = 0;
+            while(token != NULL)
+            {
+                if(token == '\n')
+                {
+                    day++;
+                    k = 0;
+                    token = strtok(NULL, ",");
+                }
+                t[k++].priceHistory[day] = atof(token);
+                token = strtok(NULL, ",");
+            }
+            f(&(root->left), day - 1);
+            f(&(root->right), day - 1);
+            //printf("\n");
+        }
+    }
+    
 
     fclose(fIn);
     fclose(fOut);
