@@ -55,13 +55,8 @@ void g(TreeNode** root, char* stockName, float v[], int day, int current)
     {
         g(&(*root)->right, stockName, v, day, current + 1);
     }
-    else if(v[current] > v[current + 1])
+    else if(v[current] >= v[current + 1])
     {
-        g(&(*root)->left, stockName, v, day, current + 1);
-    }
-    else if(v[current] == v[current + 1])
-    {
-        g(&(*root)->right, stockName, v, day, current + 1);
         g(&(*root)->left, stockName, v, day, current + 1);
     }
 }
@@ -82,7 +77,7 @@ void afis(TreeNode* root)
     afis(root->right);
 }
 
-void h(TreeNode** root, int day, int current, struct tabel t[], int n, int myIndex, int* switchAfisare)
+void h(TreeNode** root, int day, int current, struct tabel t[], int n, int myIndex, int* switchAfisare, FILE* outputFILE)
 {
     if(*root == NULL)
     {
@@ -108,11 +103,11 @@ void h(TreeNode** root, int day, int current, struct tabel t[], int n, int myInd
             {
                 if(*switchAfisare == 1)
                 {
-                    printf("\n%s-%s", t[myIndex].stockName, iter->symbol);
+                    fprintf(outputFILE, "\n%s-%s", t[myIndex].stockName, iter->symbol);
                 }
                 else if(*switchAfisare == 0)
                 {
-                    printf("%s-%s", t[myIndex].stockName, iter->symbol);
+                    fprintf(outputFILE, "%s-%s", t[myIndex].stockName, iter->symbol);
                     *switchAfisare = 1;
                 }
             }
@@ -121,17 +116,12 @@ void h(TreeNode** root, int day, int current, struct tabel t[], int n, int myInd
         }
         return;
     }
-    if(t[myIndex].priceHistory[current] < t[myIndex].priceHistory[current + 1])
+    if(t[myIndex].priceHistory[current] <= t[myIndex].priceHistory[current + 1])
     {
-        h(&(*root)->left, day, current + 1, t, n, myIndex, switchAfisare);
+        h(&(*root)->left, day, current + 1, t, n, myIndex, switchAfisare, outputFILE);
     }
     else if(t[myIndex].priceHistory[current] > t[myIndex].priceHistory[current + 1])
     {
-        h(&(*root)->right, day, current + 1, t, n, myIndex, switchAfisare);
-    }
-    else if(t[myIndex].priceHistory[current] == t[myIndex].priceHistory[current + 1])
-    {
-        h(&(*root)->left, day, current + 1, t, n, myIndex, switchAfisare);
-        h(&(*root)->right, day, current + 1, t, n, myIndex, switchAfisare);
+        h(&(*root)->right, day, current + 1, t, n, myIndex, switchAfisare, outputFILE);
     }
 }
