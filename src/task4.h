@@ -11,3 +11,4 @@ void ireductibil(fractie *x);
 int cmmdc(int a, int b);
 fractie adunare(fractie x, fractie y);
 fractie inmultire(fractie x, fractie y);
+void afisareFractie(fractie x);

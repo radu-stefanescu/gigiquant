@@ -322,8 +322,8 @@ int main(int argc, const char *argv[])
         int nrStari = -1;
         for(i = 0; i < N - 1; i++)
         {
-            j = (int)((observatii[i] - vMin) / d);
-            k = (int)((observatii[i + 1] - vMin) / d);
+            j = (int)((observatii[i] - pretMin) / d);
+            k = (int)((observatii[i + 1] - pretMin) / d);
             
             a[j][k].numarator++;
             a[j][k].numitor = 1;
@@ -362,7 +362,8 @@ int main(int argc, const char *argv[])
         probStare[start].numarator = 1;
         probStare[start].numitor = 1;
 
-        f(a, N, probStare, nrStari, K, 1, target);
+        fprintf(stdout, "0\n");
+        f(a, N, probStare, nrStari, K, 2, target);
 
     }
 

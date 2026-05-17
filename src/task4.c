@@ -45,7 +45,7 @@ void f(fractie a[][100], int N, fractie probStare[], int nrStari, int K, int zi,
         probStare[i] = nextProbStare[i];
     }
 
-    fprintf(stdout, "%d/%d\n", probStare[target].numarator, probStare[target].numitor);
+    afisareFractie(probStare[target]);
 
     f(a, N, probStare, nrStari, K, zi + 1, target);
 }
@@ -85,4 +85,16 @@ fractie inmultire(fractie x, fractie y)
     p.numitor = x.numitor * y.numitor;
     ireductibil(&p);
     return p;
+}
+
+void afisareFractie(fractie x)
+{
+    if(x.numitor == 1)
+    {
+        fprintf(stdout, "%d\n", x.numarator);
+    }
+    else
+    {
+        fprintf(stdout, "%d/%d\n", x.numarator, x.numitor);
+    }
 }
