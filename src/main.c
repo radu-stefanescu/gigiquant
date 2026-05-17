@@ -1,7 +1,7 @@
 /*
 
 Programul primeste un fisier de intrare si unul de iesire si ruleaza
-3 tipuri de task-uri in functie de indexul testului extras din argumente:
+3 tipuri de task-uri in functiee de indexul testului extras din argumente:
 - Task 1 (Teste 1-5): Calcul Sharpe Ratio folosind Liste Simplu Inlantuite.
 - Task 2 (Teste 6-10): Analiza de tranzactionare folosind Stive si Cozi.
 - Task 3 (Teste 11-15): Diversificare portofoliu gasind actiuni "in oglinda" 
@@ -17,6 +17,7 @@ folosind Arbori Binari.
 #include "stive.h"
 #include "cozi.h"
 #include "arbori.h"
+#include "task4.h"
 
 #define PRECIZIE 3
 
@@ -32,7 +33,7 @@ int main(int argc, const char *argv[])
     int n1 = 0, n2 = 0, i;
     char s[10];
     
-    // Extragem numarul testului (ex: 12 din data12.in si data12.ref)
+    //Extragem numarul testului (ex: 12 din data12.in sii data12.ref)
     for(i = 1; i <= 2; i++)
     {
         int j = 0, k = -5;
@@ -68,7 +69,7 @@ int main(int argc, const char *argv[])
     }
     
 
-    // Verificam ca fisierele input si output corespund aceluiasi test
+    // Verificam ca fisierle input si output corespund aceluiasi test
     if(n1 != n2)
     {
         printf("Eroare la comparatie (in si ref diferite)!\n");
@@ -277,7 +278,93 @@ int main(int argc, const char *argv[])
             free(t[i].stockName); // Eliberarea memorie alocate de strdup pt nume
         }
     }
-    
+    else if(n1 >= 16 && n1 <= 20)
+    {
+        int N, K, i, j, k;
+        float d, P_start, P_target;
+
+        fscanf(fIn, "%d%f%d%f%f", &N, &d, &K, &P_start, &P_target);
+        
+        float observatii[100], vMin = 9999.0f, vMax = -1.0f, pretMin = 0.0f, pretMax = 0.0f;
+        for(i = 0; i < N; i++)
+        {
+            fscanf(fIn, "%f", &observatii[i]);
+            if(observatii[i] < vMin)
+            {
+                vMin = observatii[i];
+            }
+            if(observatii[i] > vMax)
+            {
+                vMax = observatii[i];
+            }
+        }
+
+        while(pretMin < vMin)
+        {
+            pretMin += d;
+        } 
+        pretMin -= d;
+        while(pretMax < vMax)
+        {
+            pretMax += d;
+        }
+        //fprintf(stdout, "%.1f %.1f", pretMin, pretMax);
+
+        fractie a[100][100];
+        for(i = 0; i < 100; i++)
+        {
+            for(j = 0; j < 100; j++)
+            {
+                a[i][j].numarator = 0;
+                a[i][j].numitor = 1;
+            }
+        }
+        int nrStari = -1;
+        for(i = 0; i < N - 1; i++)
+        {
+            j = (int)((observatii[i] - vMin) / d);
+            k = (int)((observatii[i + 1] - vMin) / d);
+            
+            a[j][k].numarator++;
+            a[j][k].numitor = 1;
+            if(j > nrStari)
+            {
+                nrStari = j;
+            }
+            if(k > nrStari)
+            {
+                nrStari = k;
+            }
+        }
+        nrStari++;
+
+        for(i = 0; i < nrStari; i++)
+        {
+            int num = numitor(a[i], nrStari);
+            if(num > 0)
+            {
+                for(j = 0; j < nrStari; j++)
+                {
+                    a[i][j].numitor = num;
+                }
+            }
+        }
+
+        int target = (int)((P_target - pretMin) / d);
+        fractie probStare[100];
+
+        int start = (int)((P_start - pretMin) / d);
+        for(i = 0; i < 100; i++)
+        {
+            probStare[i].numarator = 0;
+            probStare[i].numitor = 1;
+        }
+        probStare[start].numarator = 1;
+        probStare[start].numitor = 1;
+
+        f(a, N, probStare, nrStari, K, 1, target);
+
+    }
 
     fclose(fIn);
     fclose(fOut);
