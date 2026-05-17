@@ -362,8 +362,8 @@ int main(int argc, const char *argv[])
         probStare[start].numarator = 1;
         probStare[start].numitor = 1;
 
-        fprintf(stdout, "0\n");
-        f(a, N, probStare, nrStari, K, 2, target);
+        //fprintf(fOut, "0");
+        f(a, N, probStare, nrStari, K, 1, target, fOut);
 
     }
 

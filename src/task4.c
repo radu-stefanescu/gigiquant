@@ -12,9 +12,15 @@ int numitor(fractie *a, int nrStari)
     return count;
 }
 
-void f(fractie a[][100], int N, fractie probStare[], int nrStari, int K, int zi, int target)
+void f(fractie a[][100], int N, fractie probStare[], int nrStari, int K, int zi, int target, FILE *file1)
 {
     if(zi > K) return;
+
+    afisareFractie(probStare[target], file1);
+    if(zi != K)
+    {
+        fprintf(file1, "\n");
+    }
 
     int i, j, h = 0;
     fractie nextProbStare[100];
@@ -45,9 +51,7 @@ void f(fractie a[][100], int N, fractie probStare[], int nrStari, int K, int zi,
         probStare[i] = nextProbStare[i];
     }
 
-    afisareFractie(probStare[target]);
-
-    f(a, N, probStare, nrStari, K, zi + 1, target);
+    f(a, N, probStare, nrStari, K, zi + 1, target, file1);
 }
 
 void ireductibil(fractie *x)
@@ -87,14 +91,18 @@ fractie inmultire(fractie x, fractie y)
     return p;
 }
 
-void afisareFractie(fractie x)
+void afisareFractie(fractie x, FILE* file1)
 {
-    if(x.numitor == 1)
+    if(x.numarator == 0)
     {
-        fprintf(stdout, "%d\n", x.numarator);
+        fprintf(file1, "0");
+    }
+    else if(x.numitor == 1)
+    {
+        fprintf(file1, "%d", x.numarator);
     }
     else
     {
-        fprintf(stdout, "%d/%d\n", x.numarator, x.numitor);
+        fprintf(file1, "%d/%d", x.numarator, x.numitor);
     }
 }
