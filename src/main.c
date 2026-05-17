@@ -17,7 +17,7 @@ folosind Arbori Binari.
 #include "stive.h"
 #include "cozi.h"
 #include "arbori.h"
-#include "task4.h"
+#include "markov.h"
 
 #define PRECIZIE 3
 
@@ -280,7 +280,7 @@ int main(int argc, const char *argv[])
     }
     else if(n1 >= 16 && n1 <= 20)
     {
-        int N, K, i, j, k;
+        int N, K, j;
         float d, P_start, P_target;
 
         fscanf(fIn, "%d%f%d%f%f", &N, &d, &K, &P_start, &P_target);
@@ -322,8 +322,10 @@ int main(int argc, const char *argv[])
         int nrStari = -1;
         for(i = 0; i < N - 1; i++)
         {
+            // Calcul indici pt matrice
+            
             j = (int)((observatii[i] - pretMin) / d);
-            k = (int)((observatii[i + 1] - pretMin) / d);
+            int k = (int)((observatii[i + 1] - pretMin) / d);
             
             a[j][k].numarator++;
             a[j][k].numitor = 1;
@@ -338,6 +340,8 @@ int main(int argc, const char *argv[])
         }
         nrStari++;
 
+        // Calcul matrice initiala cu probabilitatile de trecere (un fel de normalizzre)
+        
         for(i = 0; i < nrStari; i++)
         {
             int num = numitor(a[i], nrStari);
@@ -362,8 +366,8 @@ int main(int argc, const char *argv[])
         probStare[start].numarator = 1;
         probStare[start].numitor = 1;
 
-        //fprintf(fOut, "0");
-        f(a, N, probStare, nrStari, K, 1, target, fOut);
+        // functia care populeazq vec probStare si afisaza prob pt cele K zile
+        markov(a, N, probStare, nrStari, K, 1, target, fOut);
 
     }
 
