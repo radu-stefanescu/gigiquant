@@ -1,0 +1,10 @@
+# Ignoră executabilele
+src/a.out
+src/test
+
+# Ignoră logurile și fișierele temporare ale checker-ului
+checker_log.txt
+.checker_temp/
+checker-linux-amd64
+checker-linux-amd64:Zone.Identifier
+bin/
