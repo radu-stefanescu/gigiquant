@@ -36,3 +36,31 @@ Programul așteaptă exact două argumente la linia de comandă:
   * **Logică:** Axa prețurilor este discretizată în intervale (stări). Matricea de tranziție este populată numărând trecerile dintr-o stare în alta, apoi normalizată.
   * Pentru a asigura precizia și a evita erorile tip `float`, logica folosește o structură custom `fractie` cu operații de adunare, înmulțire și simplificare (prin CMMDC).
   * Evoluția prețului este simulată recursiv timp de `K` zile, afișând probabilitatea exactă de a atinge targetul.
+ 
+  * ## Structura Fișierelor și Rolul Acestora
+
+Proiectul este modularizat pentru a separa clar logica fiecărei structuri de date de fluxul principal al programului:
+
+* **`main.c`**
+  * **Rol:** Punctul de intrare al programului. 
+  * **Ce face:** Parsează argumentele din linia de comandă, extrage numărul testului, deschide fișierele de intrare/ieșire și folosește un bloc `if-else` pentru a direcționa fluxul de execuție către logica task-ului corespunzător (1, 2, 3 sau 4). Aici se face citirea și parsarea principală a datelor.
+
+* **`liste.c` & `liste.h` (Task 1)**
+  * **Rol:** Implementarea listelor simplu înlănțuite.
+  * **Ce face:** Definește structura `Node` care reține prețul și randamentul calculat. Conține funcția `addAtEnd` pentru a adăuga secvențial observațiile din piață și a calcula randamentul on-the-fly, precum și funcția `trunk` pentru formatarea matematică a output-ului.
+
+* **`stive.c` & `stive.h` (Task 2)**
+  * **Rol:** Implementarea structurii de tip Stivă (LIFO).
+  * **Ce face:** Oferă funcțiile de bază (`push`, `pop`, `isStackEmpty`, `deleteStack`). În contextul proiectului, cele 3 stive sunt folosite pentru a reține prețurile de pe cele 3 piețe (Londra, Berlin, Paris) și a le extrage sincronizat pentru a compara diferențele de preț dintr-o anumită zi.
+
+* **`cozi.c` & `cozi.h` (Task 2)**
+  * **Rol:** Implementarea structurii de tip Coadă (FIFO).
+  * **Ce face:** Conține operațiile clasice (`enQueue`, `deQueue`, `createQueue`). Este folosită pentru a stoca oportunitățile de arbitraj (ziua, diferența absolută, piața atipică) pe măsură ce sunt găsite în istoricul extras din stive, garantând afișarea lor în ordinea cronologică corectă la final.
+
+* **`arbori.c` & `arbori.h` (Task 3)**
+  * **Rol:** Implementarea logicii pentru Arbori Binari.
+  * **Ce face:** Conține funcțiile de alocare a arborelui (`createEmptyTree`), popularea acestuia în funcție de creșterile/scăderile prețurilor (`insertStock`) și cel mai important, funcția recursivă `findMirroredStock`, care traversează arborele pe un drum diametral opus pentru a găsi acțiunile complementare necesare diversificării portofoliului.
+
+* **`markov.c` & `markov.h` (Task 4)**
+  * **Rol:** Motorul matematic și de simulare pentru Lanțurile Markov.
+  * **Ce face:** Pe de o parte, definește structura custom `fractie` și implementează operațiile matematice necesare calculului exact, fără erori de virgulă mobilă (`cmmdc`, `adunare`, `inmultire`, `ireductibil`). Pe de altă parte, conține algoritmul recursiv `markov` care primește matricea de tranziție a stărilor și simulează trecerea timpului, calculând probabilitatea exactă ca o acțiune să atingă prețul țintă în ziua `K`.
